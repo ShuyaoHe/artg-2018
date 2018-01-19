@@ -142,11 +142,20 @@ d3.csv('./data/hubway_trips_reduced.csv', parse, function(err,trips){
 	Hint: there are multiple ways of doing this, including using d3.nest.rollup, but attempt this with what we've learned in this assignment
 	YOUR CODE HERE:
 	***/
-	const tripsByStation1 = d3.nest()
-  .key(function(d) { return d.station0; })
-  .rollup(function(v) { return v.length; })
-  .entries(trips);
-   console.log(JSON.stringify(tripsByStation1));
+	const tripsByStation1 = tripsByStation0
+   .map(function(d){
+		 return{
+			 key: d.key,
+			 volume:d.value.length
+		 };
+	 });
+	 console.log(tripsByStation1);
+
+	// d3.nest()
+  // .key(function(d) { return d.station0; })
+  // .rollup(function(v) { return v.length; })
+  // .entries(trips);
+  //  console.log(JSON.stringify(tripsByStation1));
 
 
 	/***
