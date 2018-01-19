@@ -43,7 +43,8 @@ d3.csv('./data/hubway_trips_reduced.csv', parse, function(err,trips){
 	console.log('There are ' + trips.length + ' trips.');
 	console.log('There are ${trips.length} trips.');
 	const longestDuration = d3.max(trips, function(d){ return d.duration});
-	const longestDuration = d3.max(trips.map(function(d){return d.duration}));//MODIFY THIS
+	const longestDuration2 = d3.max(trips.map(function(d){return d.duration}));//MODIFY THIS
+
 	console.log(`Longest trip duration is ${longestDuration/3600} hours`);
 
 
@@ -63,8 +64,8 @@ d3.csv('./data/hubway_trips_reduced.csv', parse, function(err,trips){
 	Please look at the definition of "mean" and "median" if you are not entirely sure of the difference
 	YOUR CODE HERE:
 	***/
-	const meanDuration = undefined; //MODIFY THIS
-	const medianDuration = undefined; //MODIFY THIS
+	const meanDuration = d3.mean(trips, function(d){return d.duration}); //MODIFY THIS
+	const medianDuration = d3.median(trips, function(d){return d.duration}); //MODIFY THIS
 	console.log(`Median duration is ${medianDuration} seconds; mean duration is ${meanDuration} seconds`);
 
 	/***
@@ -98,7 +99,7 @@ d3.csv('./data/hubway_trips_reduced.csv', parse, function(err,trips){
 	YOUR CODE HERE:
 	***/
 	const top10RegisteredTrips = registeredTrips.slice(0,10);
-	const bottom10RegisteredTrips = registeredTrips.slice();
+	const bottom10RegisteredTrips = registeredTrips.slice(-10);
 	console.log(top10RegisteredTrips);
 	console.log(bottom10RegisteredTrips);
 	/**
@@ -106,7 +107,10 @@ d3.csv('./data/hubway_trips_reduced.csv', parse, function(err,trips){
 	Does Array.prototype.slice create a new array, or modify existing arrays in place?
 	YOUR CODE HERE:
 	***/
-
+  const slicedRegisteredTrips = registeredTrips.slice(110750);
+	console.log(slicedRegisteredTrips);
+	console.log(registeredTrips);
+	console.log(registeredTrips === slicedRegisteredTrips);
 	/**
 	3.4 Instead of an array of trips, generate a completely new array of departure timestamps (i.e. t0)
 	Hint: use Array.prototype.map
@@ -114,7 +118,11 @@ d3.csv('./data/hubway_trips_reduced.csv', parse, function(err,trips){
 	YOUR CODE HERE:
 	***/
 	const departureTimestamps = trips.map(function(d){return d.t0});
+	const departureTime = function(d){return d.t0};
 	console.log(departureTimestamps);
+	console.log(departureTime);
+	console.log(departureTimestamps === departureTime);
+
 
 	/***
 	4.0 Nest
@@ -122,12 +130,24 @@ d3.csv('./data/hubway_trips_reduced.csv', parse, function(err,trips){
 	4.1 Create a nested array, where trips are nested by departure station (i.e. station0)
 	YOUR CODE HERE:
 	***/
+	const tripsByStation0 = d3.nest()
+	  .key(function(d){return d.station0})
+		.entries(trips);
+		console.log(tripsByStation0);
+
+
 
 	/***
 	4.2 Further "collapse" this array, so that for each departure stations, we have the number of trips departing from each
 	Hint: there are multiple ways of doing this, including using d3.nest.rollup, but attempt this with what we've learned in this assignment
 	YOUR CODE HERE:
 	***/
+	const tripsByStation1 = d3.nest()
+  .key(function(d) { return d.station0; })
+  .rollup(function(v) { return v.length; })
+  .entries(trips);
+   console.log(JSON.stringify(tripsByStation1));
+
 
 	/***
 	5.0 BONUS Question
